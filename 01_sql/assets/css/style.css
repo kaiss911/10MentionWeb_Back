@@ -1,0 +1,28 @@
+body{
+    background-color: #333;
+}
+header nav img{
+    width: 50px;
+}
+header{
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1;
+}
+.container{
+    background-color: #fff;
+    padding-top: 7rem;
+}
+hr{
+    height: 7px;
+    background: linear-gradient(to right, #ce0380 0%, #a409cb 50%, #af000f);
+    width: 80%;
+    margin: 0 auto;
+}
+strong{
+    color: #ce0380;
+}
+em{
+    color: darkslategrey;
+}
