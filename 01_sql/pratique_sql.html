@@ -60,7 +60,7 @@
                     <ul>
 
                         <li>Afficher le nom , le prénom et le service des employés qui ont une lettre t à la fin du prénom et travailent dans le service  commercial et comptabilité : <br>
-                         SELECT nom , prenom , service FROM employes WHERE  prenom LIKE '%t' AND service = comptabilité OR service = commercial
+                         SELECT nom , prenom , service FROM employes WHERE  prenom LIKE '%t' AND (service = comptabilité OR service = commercial)
                         </li>
                         <li>
                             le nom , le prénom et la date d'embauche des employés qui ont été embaucher après 2007 et ont le sexe = 'f ' : <br>
@@ -105,24 +105,24 @@
                             SELECT COUNT(*) AS nombre_recrutement FROM employes WHERE date_embauche BETWEEN '2022-01-01' AND '2022-12-31';
                         </li>
                         <li>Augmenter le salaire pour chaque employé de 100€ : <br>
-
+                            UPDATE employes SET salaire = salaire + 100
                         </li>
                         <li>Afficher le nombre de service : <br>
-
+                            SELECT COUNT(DISTINCT service) FROM employes;
                         </li>
                         <li>
                             Afficher 10 employés à partir de l'enregistrement 10 : <br>
-
+                            SELECT * FROM employes LIMIT 10,10;
                         </li>
                         <li>
                             Afficher les salaires qui sont touchées par plus qu'un employé : <br>
-
+                            SELECT salaire FROM employes GROUP BY salaire HAVING COUNT(*) > 1
+                        </li>
+                        <li>Afficher l'employé ayant été embauché en dernier : <br>
+                            SELECT * FROM employes ORDER BY date_embauche DESC LIMIT 1
                         </li>
                         <li>Afficher les informations de l'employé du service commercial gagnant le salaire le plus élevé : <br>
 
-
-                        </li>
-                        <li>Afficher l'employé ayant été embauché en dernier : <br>
 
                         </li>
 
