@@ -42,6 +42,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="07_tableaux.php">Les tableaux en PHP</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="08_fonctions.php">Les fonctions en PHP</a>
+                    </li>
                 </ul>
 
             </div>

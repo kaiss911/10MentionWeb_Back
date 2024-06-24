@@ -1,17 +1,9 @@
 <?php
    $titre='Variables et Constantes';
    $titreH1='Variables et Constantes en PHP';
+   $paragraphe=null;
    include "inc/header.inc.php";
    ?>
-  <header class="p-5 m-4 bg-light rounded-3 border">
-    <section class="container py-5">
-        <?php
-        
-        echo "<h1 class=\"display-5 fw-bold\">Les variables et les constantes en PHP</h1>";
-        
-        ?>
-    </section>
-  </header>
   <main class="container-fluid px-5">
         <?php
 
