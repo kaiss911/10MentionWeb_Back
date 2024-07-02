@@ -14,7 +14,7 @@
 
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-        <link rel="stylesheet" href="assets/css/style.css">
+        <link rel="stylesheet" href="<?=RACINE_SITE?>assets/css/style.css">
         <title></title>
     </head>
 
@@ -29,7 +29,7 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav w-100 d-flex justify-content-end">
                     <li class="nav-item">
-                        <a class="nav-link " aria-current="page" href="index.php">Accueil</a>
+                        <a class="nav-link " aria-current="page" href="<?=RACINE_SITE?>index.php">Accueil</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -41,18 +41,46 @@
                             <li><a class="dropdown-item" href="#">Aventure</a></li>
                         </ul>
                     </li>
+                    <?php
+                        if (empty($_SESSION['user'])){
+                    ?>              
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?=RACINE_SITE?>register.php">Inscription</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?=RACINE_SITE?>authentification.php">Connexion</a>
+                        </li>
+
+                    <?php
+                        }else{
+                    ?>
+
                     <li class="nav-item">
-                        <a class="nav-link" href="register.php">Inscription</a>
+                        <a class="nav-link" href="<?=RACINE_SITE?>profil.php">Compte</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="authentification.php">Connexion</a>
+                        <a class="nav-link" href="?action=deconnexion">Déconnexion</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Backoffice</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Déconnexion</a>
-                    </li>
+
+                    <?php
+                        if ($_SESSION['user']['role'] == "ROLE_ADMIN") {
+                    ?>
+                          <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="" role="button" data-bs-toggle="dropdown" aria-expanded="false">Backoffice</a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item text-dark fs-4" href="<?=RACINE_SITE?>admin/categories.php">Catégories</a></li>
+                                <li><a class="dropdown-item text-dark fs-4" href="<?=RACINE_SITE?>admin/films.php">Films</a></li>
+                                <li><a class="dropdown-item text-dark fs-4" href="<?=RACINE_SITE?>admin/users.php">utilisateurs</a></li>
+                            </ul>
+
+                        </li>
+                    
+                    <?php
+                        }}
+                    ?>    
+
+
+                    
                     <li class="nav-item">
                         <a class="nav-link" href="#"><i class="bi bi-cart"></i></a>
                     </li>
@@ -61,5 +89,6 @@
             </div>
             </nav>
         </header>
+        <main>
         
         

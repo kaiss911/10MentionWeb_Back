@@ -1,7 +1,7 @@
 <?php
 
 require_once "inc/functions.inc.php";
-require_once "inc/header.inc.php";
+
 
 $info = "";
 
@@ -49,9 +49,17 @@ if (!empty($_POST)) {
                 //Ensuite on stock les données dans scette session
                 $_SESSION['user']=$user;
                 debug($_SESSION['user']);
-                
+                // nous créons une session avec les infos de l'utilisateur provenant de la BDD. 
+                //  cette variable créé et affecté dans cette page sera accessible partout dans le site une fois la fonction session_start() est appelé
 
+                header('location: profil.php');//rediriger l'utilisateur vers la page profil.php
+
+            } else{
+                $info = alert('les identifiants sont incorrectes', 'danger');
             }
+
+        }else{
+            $info = alert('les identifiants sont incorrectes', 'danger');
         }
     }
 
@@ -60,12 +68,7 @@ if (!empty($_POST)) {
 }
 
 
-
-
-
-
-
-
+require_once "inc/header.inc.php";
 ?>
 
 <main style="background:url(assets/img/5818.png) no-repeat; background-size: cover; background-attachment: fixed;">

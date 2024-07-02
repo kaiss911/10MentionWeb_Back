@@ -2,6 +2,16 @@
 <?php
 
 session_start();
+//////////////////////////////////// constante pour définir le chemin du site /////////////////////////////////////////////////////////
+
+ // constante qui définit les dosiiers dans lesquels se situe le site pour pouvoir déterminer des chemins absolus à partir de localhost (on ne prends localhost). Ainsi nous écrivons tous les chemins (exp : src, href ) en absolu avec cette constante
+
+ define('RACINE_SITE', 'http:/10mentionweb_back/02_php/site_cinema/');
+ 
+
+
+
+
 ##################################### Fonction pour debuger #############################
 
 function debug($var){
@@ -19,13 +29,16 @@ function alert(string $contenu, string $class){
             <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\" aria-label=\"Close\"></button>
         </div>";
 
-
-
-
-
 }
+######################################Fonction pour la deconection ################################
 
-
+function logOut(){
+    if (isset($_GET['action']) && $_GET['action'] == "deconnexion") {
+        unset($_SESSION['user']);
+        header('location:index.php');
+    }
+}
+logOut();
 ##################################### Fonction pour la connexion à la BDD #############################
 
 // On vas utiliser l'extension PHP Data Objects (PDO), elle définit une excellente interface pour accéder à une base de données depuis PHP et d'exécuter des requêtes SQL .
@@ -255,9 +268,25 @@ function checkUser(string $pseudo, string $email) : mixed{
     $result = $request->fetch();
     return $result;
 }
+////////////////////////////////////fonction pour récuperer tout les utilisateur///////////////////////////////
+
+function allUsers() :mixed{
+
+    $cnx = connexionBdd();
+    $sql = "SELECT * FROM users";
+    $request = $cnx->query($sql);
+    $result = $request->fetchAll(); // fetchAll() récupère tout les résultats dans la reqûête et les sort sous forme d'un tableau à 2 dismensions
+    return $result;
+}
+
+////////////////////////////////////fonction pour récuperer tout les utilisateur///////////////////////////////
+
+function deletUser(int $id_user):void{
+    $cnx = connexionBdd();
+    $sql ="DELETE FROM users WHERE id_user = :id_user  ";
+    $request = $cnx->prepare($sql);
+    $request->execute(array(":lastName" => $id_user));
+}
 
 
-
-
-
-        ?>
+?>
