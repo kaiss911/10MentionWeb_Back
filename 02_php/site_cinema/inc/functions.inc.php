@@ -74,7 +74,7 @@ logOut();
                 // avec la variable dsn et les constantes d'environnement
 
                 $pdo = new PDO($dsn, DBUSER, DBPASS);
-                echo "je suis connectée";
+                
 
             //On définit le mode d'erreur de PDO sur Exception
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -204,7 +204,40 @@ logOut();
                     3- On exécute la requête
 
             */
+            // Créer un tableau associatif avec les noms des colonnes comme clés
+            // Les noms des clés du tableau $data correspondent aux noms des colonnes dans la base de données.
+            
+            $data = [
+                'firstName' => $firstName,
+                'lastName' => $lastName,
+                'pseudo' => $pseudo,
+                'mdp' => $mdp,
+                'email' => $email,
+                'phone' => $phone,
+                'civility' => $civility,
+                'birthday' => $birthday,
+                'address' => $address,
+                'zip' => $zip,
+                'city' => $city,
+                'country' => $country
+            ];
 
+            //echapper les données et les traiter contre les failles JS (XSS)
+            foreach ($data as $key => $value) {
+                $data[$key] = htmlentities($value, ENT_QUOTES, 'UTF-8');
+            }
+            /* 
+            htmlspecialchars est une fonction qui convertit les caractères spéciaux en entités HTML, cela est utilisé afin d'empêcher l'exécution de code HTML ou JavaScript : les attaques XSS (Cross-Site Scripting) injecté par un utilisateur malveillant en échappant les caractères HTML potentiellement dangereux . Par défaut, htmlspecialchars échappe les caractères suivants :
+
+            & (ampersand) devient &amp;
+            < (inférieur) devient &lt;
+            > (supérieur) devient &gt;
+            " (guillemet double) devient &quot;*/
+
+        /*
+            ENT_QUOTES : est une constante en PHP  qui onvertit les guillemets simples et doubles. => ' (guillemet simple) devient &#039; 
+            'UTF-8' : Spécifie que l'encodage utilisé est UTF-8.
+        */
             $cnx = connexionBdd();
 
             // on prépare la requête
@@ -213,20 +246,21 @@ logOut();
 
             $request = $cnx->prepare($sql); //prepare() est une méthode qui permet de préparer la requête sans l'exécuter. Elle contient un marqueur :firstName qui est vide et attend une valeur.
             // $requet est à cette ligne  encore un objet PDOstatement .
-            $request->execute(array(
-                ":lastName" => $lastName,
-                ":firstName" => $firstName,
-                ":pseudo" => $pseudo,
-                ":email" => $email,
-                ":phone" => $phone,
-                ":mdp" => $mdp,
-                ":civility" => $civility,
-                ":birthday" => $birthday,
-                ":address" => $address,
-                ":zip" => $zip,
-                ":city" => $city,
-                ":country" => $country
-            )); // execute() permet d'exécuter toute la requête préparée avec prepare().
+            $request->execute(array( 
+                // Le tableau associatif contient les valeurs échappées à insérer dans la base de données, associées aux paramètres nommés de la requête préparée.
+                ':firstName' => $data['firstName'],
+                ':lastName' => $data['lastName'],
+                ':pseudo' => $data['pseudo'],
+                ':mdp' => $data['mdp'],
+                ':email' => $data['email'],
+                ':phone' => $data['phone'],
+                ':civility' => $data['civility'],
+                ':birthday' => $data['birthday'],
+                ':address' => $data['address'],
+                ':zip' => $data['zip'],
+                ':city' => $data['city'],
+                ':country' => $data['country'],
+            ));// execute() permet d'exécuter toute la requête préparée avec prepare().
 
         }
 
@@ -285,8 +319,72 @@ function deletUser(int $id_user):void{
     $cnx = connexionBdd();
     $sql ="DELETE FROM users WHERE id_user = :id_user  ";
     $request = $cnx->prepare($sql);
-    $request->execute(array(":lastName" => $id_user));
+    $request->execute(array(":id_user" => $id_user));
 }
 
 
+function allcat() :mixed{
+    $cnx = connexionBdd();
+    $sql = "SELECT * FROM categories";
+    $request = $cnx->query($sql);
+    $result = $request->fetchAll(); // fetchAll() récupère tout les résultats dans la reqûête et les sort sous forme d'un tableau à 2 dismensions
+    return $result;
+}
+
+function addCategories($name ,$description):void{
+    $cnx = connexionBdd();
+    $sql ="INSERT INTO categories (name, description) VALUES (:name , :description)";
+    $request = $cnx->prepare($sql);
+    $request->execute(array(":name" => $name , ":description" => $description));
+}
+
+function deletcat(int $idcat):void{
+    $cnx = connexionBdd();
+    $sql ="DELETE FROM categories WHERE id_category = :id_user  ";
+    $request = $cnx->prepare($sql);
+    $request->execute(array(":id_user" => $idcat));
+}
+
+
+
+
+
+
+
+function updateRole(string $role, int $id) :void{
+    $cnx = connexionBdd();
+    $sql = "UPDATE users SET role = :role WHERE id_user = :id_user";
+    $request = $cnx->prepare($sql);
+    $request->execute(array(
+        ':role' => $role,
+        ':id_user' => $id
+    ));
+}
+
+
+
+
+
+
+function showUser(int $id):mixed{
+    $cnx = connexionBdd();
+    $sql = "SELECT * FROM users WHERE id_user = :id_user";
+    $request = $cnx->prepare($sql);
+    $request->execute(array(
+        ':id_user' => $id
+    ));
+    $result = $request->fetch();
+    return $result;
+}
+
+
+
+
+
+
+
+
 ?>
+
+
+

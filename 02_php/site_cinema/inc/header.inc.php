@@ -56,7 +56,7 @@
                     ?>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="<?=RACINE_SITE?>profil.php">Compte</a>
+                        <a class="nav-link" href="<?=RACINE_SITE?>profil.php"><sup class="badge text-bg-danger"><?=$_SESSION['user']['firstName']?></sup></a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="?action=deconnexion">Déconnexion</a>
