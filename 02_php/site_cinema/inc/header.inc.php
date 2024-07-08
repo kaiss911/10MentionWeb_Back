@@ -53,6 +53,7 @@
 
                     <?php
                         }else{
+                            
                     ?>
 
                     <li class="nav-item">
@@ -64,6 +65,7 @@
 
                     <?php
                         if ($_SESSION['user']['role'] == "ROLE_ADMIN") {
+                        
                     ?>
                           <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="" role="button" data-bs-toggle="dropdown" aria-expanded="false">Backoffice</a>
@@ -71,6 +73,7 @@
                                 <li><a class="dropdown-item text-dark fs-4" href="<?=RACINE_SITE?>admin/categories.php">Catégories</a></li>
                                 <li><a class="dropdown-item text-dark fs-4" href="<?=RACINE_SITE?>admin/films.php">Films</a></li>
                                 <li><a class="dropdown-item text-dark fs-4" href="<?=RACINE_SITE?>admin/users.php">utilisateurs</a></li>
+                                <li><a class="dropdown-item text-dark fs-4" href="<?=RACINE_SITE?>admin/gestion_film.php">gestion_film</a></li>
                             </ul>
 
                         </li>

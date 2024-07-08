@@ -1,33 +1,41 @@
 <?php
 require_once "../inc/functions.inc.php";
-require_once "../inc/header.inc.php";
-    $users = aLLUsers();
-    if (isset($_GET) && isset($_GET['action']) && isset($_GET['id_user'])) {
-
-        if ($_GET['action']=='delete' && !empty($_GET['id_user'])) {
-            $idUser = htmlentities($_GET['id_user']);
-            deletUser($idUser);
-            debug(deletUser($idUser));
-        }
-
-        if ($_GET['action']=='update' && !empty($_GET['id_user'])) {
-            $idUser = htmlentities($_GET['id_user']);
-            $user = showUser($idUser);
-
-            if ($user['role'] == 'ROLE_ADMIN') {
-                updateRole('ROLE_USER', $idUser);
-                header("location:".RACINE_SITE."admin/users.php");
-                
-            } else {
-                updateRole('ROLE_ADMIN', $idUser);
-                header("location:".RACINE_SITE."admin/users.php");
-            }
-            
-        }
+$users = aLLUsers();
+if (isset($_GET) && isset($_GET['action']) && isset($_GET['id_user'])) {
+    
+    if ($_GET['action']=='delete' && !empty($_GET['id_user'])) {
+        $idUser = htmlentities($_GET['id_user']);
+        deletUser($idUser);
+        debug(deletUser($idUser));
     }
+    
+    if ($_GET['action']=='update' && !empty($_GET['id_user'])) {
+        $idUser = htmlentities($_GET['id_user']);
+        $user = showUser($idUser);
+        
+        if ($user['role'] == 'ROLE_ADMIN') {
+            updateRole('ROLE_USER', $idUser);
+            header("location:".RACINE_SITE."admin/users.php");
+            
+        } else {
+            updateRole('ROLE_ADMIN', $idUser);
+            header("location:".RACINE_SITE."admin/users.php");
+        }
+        
+    }
+}
+//gestion de l'accessibilité des pages admin
+if (empty($_SESSION['user'])) {
+    header('location:'.RACINE_SITE.'authentification.php');
+} else {
+    if ($_SESSION['user']['role'] == 'ROLE_USER') {
+        header('location:'.RACINE_SITE.'index.php');
+    }
+}
 
 
 
+require_once "../inc/header.inc.php";
 ?>
 <div class="d-flex flex-column m-auto mt-5 table-responsive">   
         <!-- tableau pour afficher toutles films avec des boutons de suppression et de modification -->
@@ -74,7 +82,8 @@ require_once "../inc/header.inc.php";
                     <td class="text-center"><a href="?action=delete&id_user=<?= $user['id_user']?>"><i class="bi bi-trash3-fill"></i></a></td>
                     <td class="text-center"><a href="?action=update&id_user=<?= $user['id_user']?>" class="btn btn-danger"><?=$user['role'] == 'ROLE_ADMIN' ?'ROLE_USER' : 'ROLE_ADMIN'?></a></td>
                 </tr>
-                <?php        
+                <?php 
+                       
                     }
                 ?>
             </tbody>

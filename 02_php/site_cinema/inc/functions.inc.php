@@ -35,7 +35,7 @@ function alert(string $contenu, string $class){
 function logOut(){
     if (isset($_GET['action']) && $_GET['action'] == "deconnexion") {
         unset($_SESSION['user']);
-        header('location:index.php');
+        header('location:'.RACINE_SITE.'index.php');
     }
 }
 logOut();
@@ -322,6 +322,32 @@ function deletUser(int $id_user):void{
     $request->execute(array(":id_user" => $id_user));
 }
 
+#######################"Fonction du CRUD pour les categories###############################
+
+
+function showCat(int $name):mixed{
+    $cnx = connexionBdd();
+    $sql = "SELECT * FROM categories WHERE name = :name";
+    $request = $cnx->prepare($sql);
+    $request->execute(array(
+        ':name' => $name
+    ));
+    $result = $request->fetch();
+    return $result;
+}
+function showCatviaID(int $name):mixed{
+    $cnx = connexionBdd();
+    $sql = "SELECT * FROM categories WHERE id_category = :id_category";
+    $request = $cnx->prepare($sql);
+    $request->execute(array(
+        ':id_category' => $name
+    ));
+    $result = $request->fetch();
+    return $result;
+}
+
+
+
 
 function allcat() :mixed{
     $cnx = connexionBdd();
@@ -331,12 +357,14 @@ function allcat() :mixed{
     return $result;
 }
 
+
 function addCategories($name ,$description):void{
     $cnx = connexionBdd();
     $sql ="INSERT INTO categories (name, description) VALUES (:name , :description)";
     $request = $cnx->prepare($sql);
     $request->execute(array(":name" => $name , ":description" => $description));
 }
+
 
 function deletcat(int $idcat):void{
     $cnx = connexionBdd();
@@ -379,9 +407,35 @@ function showUser(int $id):mixed{
 
 
 
+function update(int $idcat, string $name, string $description):void{
+    $cnx = connexionBdd();
+    $sql ="UPDATE categories SET name = :name , description = :description WHERE id_category = :id_user , name = :name , description = :description";
+    $request = $cnx->prepare($sql);
+    $request->execute(array(":id_user" => $idcat , ":name" => $name , ":description" => $description));
+}
+########################## ajout de film ##############################
 
+function addfilm($idcat ,$title ,$director ,$actors ,$age ,$duration ,$synopsis ,$date ,$price ,$stock ){
+    $cnx = connexionBdd();
+    $sql ="INSERT INTO films (category_id ,title, director ,actors ,ageLimit , duration ,synopsis ,date  ,price ,stock) VALUES (:category_id ,:title, :director ,:actors ,:ageLimit , :duration ,:synopsis ,:date ,:price ,:stock)";
+    $request = $cnx->prepare($sql);
+    $request->execute(array(
+        ":category_id" => $idcat,
+        ":title" => $title , 
+        ":director" => $director,
+        ":actors" => $actors , 
+        ":ageLimit" => $age,
+        ":duration" => $duration , 
+        ":synopsis" => $synopsis,
+        ":date" => $date ,
+        ":price" => $price,
+        ":stock" => $stock
+        
+        // ":image" => $image, 
 
-
+    
+    ));
+};
 
 
 ?>

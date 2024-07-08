@@ -85,17 +85,48 @@ Pour protéger votre application contre les attaques XSS, suivez ces pratiques :
 # Conclusion
 
 XSS est une vulnérabilité sérieuse, mais en suivant les bonnes pratiques de sécurité et en utilisant les outils et techniques appropriés, vous pouvez protéger votre application contre ces attaques.
-Markdown
-Informations
-Cet extrait a été créé le 4 juil. 2024 à 14:30:54
 
-Cet extrait expire le 3 août 2024 à 14:30:54
+######
+# Récupération du chemin absolu à mettre dans le fichier .htaccess
+- Créer un fichier path.php au même niveau que le fichier .htaccess dans l'arborescence de notre dossier
+- Appeler la fonction prédéfinie realpath() et on lui passe comme argument le nom du fichier 'path.php'
 
-Langage : markdown
+# Creation du fichier .htacess
+1 - Les lignes de codes à mettre dans ce fichier
 
-Logo markdown
+            AuthName
+            AuthType Basic
+            AuthUserFile
+            Require valid-user
 
-Link
-Voici votre URL de partage : https://sharemycode.io/c/1e362c4
-Ce code a été partagé avec Share on ShareMyCode.io pour VSCode
+2 - Explication de chaque ligne
+    AuthName :  C'est le message qui vas apparaitre lorsqu'on demande à l'utilisateur de s'authentifier
+    AuthType Basic : Le type d'authentification : basic avec un nom d'utilisateur et un mot de passe
+    AuthUserFile : Le chemin absolu qui vas mener à notre fichier .htpasswd
+    Require valid-user : il faut que l'utilisateur soit inscrit dans le fichier .htpasswd
+
+
+# Changement du chemin dans AuthUserFile
+Il faut mettre dans le chemin absolu le fichier .htpasswd
+
+# Hasher le mot de passe
+https://hellotools.org/fr/generer-crypter-mot-de-passe-pour-fichier-htpasswd
+
+copier le mot de passe hasher dans le fichier .htpasswd sou la fomre suivante
+
+                nomDeUutilisateur:MotDePasseHasher
+
+
+### Protéger un seul fichier avec .htacess
+Afn de protéger un fichier on met les mêmes ligne de code dans une balise FilesMatch avec le nom du fichier à protéger
+
+
+            <FilesMatch "chemin.php">
+
+                AuthName "Page d'administration protégée"
+                AuthType Basic
+                AuthUserFile "C:\xampp\htdocs\10mentionsweb\Evry_2023\05_php\site_portfolio\admin\.htpasswd"
+                Require valid-user
+
+            </FilesMatch>
 
