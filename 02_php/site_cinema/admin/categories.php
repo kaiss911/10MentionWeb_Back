@@ -1,38 +1,8 @@
 <?php
 require_once "../inc/functions.inc.php";
-$cat = allcat();
-
-if (isset($_GET) && isset($_GET['action']) && isset($_GET['id_category'])) {
-    
-    $idcat = htmlentities($_GET['id_category']);
-
-    if ($_GET['action']=='delete' && !empty($_GET['id_category'])) {
-
-        deletcat($idcat);
-        header("location:".RACINE_SITE."admin/categories.php");
-    }
-
-    if ($_GET['action']=='update' && !empty($_GET['id_category'])) {
-        
-        $category = showCatviaID($idcat);
-        // die();
-    }
-}
 
 
 
-
-#################################"Ajout categories
-if (isset($_POST) && isset($_POST['name']) && isset($_POST['description'])) {
-    
-    if (!empty($_POST['name']) && !empty($_POST['description'] )) {
-        
-        $catname = trim($_POST['name']);
-        $catdesc = trim($_POST['description']);
-        addCategories($catname , $catdesc);
-        header("location:".RACINE_SITE."admin/categories.php");
-    }
-}
 
 if (empty($_SESSION['user'])) {
     header('location:'.RACINE_SITE.'authentification.php');
@@ -43,56 +13,85 @@ if (empty($_SESSION['user'])) {
 }
 
 
-#####################################Ajout categories 2 eme facon
-$info="";
-if (!empty($_POST)) {//si le formulaire est envoyer 
 
-    // On vérifie si un champ est vide
-    $verif = true;
-    foreach ($_POST as $key => $value) {
 
-        if(empty( trim($value) )) {
-            $verif = false;
+$cat = allcat();
+
+//suppression et modification d'une categorie
+
+if(isset($_GET['action']) && isset($_GET['id_category'])){
+    // Suppression catégories // 
+    if(!empty($_GET['action']) && $_GET['action'] == 'delete' && !empty($_GET['id_category'])){
+        $idCategory = htmlentities($_GET['id_category']);
+        deletcat($idCategory);
+        header("location:dashboard.php?categories_php");
+    } else if(!empty($_GET['action']) && $_GET['action'] == 'update' && !empty($_GET['id_category'])){
+    // Update catégories //
+        $idCategory = htmlentities($_GET['id_category']);
+        $category = showCatviaID($idCategory);
+    } else{
+        header("location:dashboard.php?categories_php");
+    }
+}
+
+//--------------------------
+// La superglobale $_POST
+//---------------------------
+
+// debug($_POST); 
+/*
+$_POST est une superglobal qui permet de récupérer les données saisies dans un formulaire.
+
+//  Comme il s'agit d'une superglobale, $_POST est donc un tableau (array), et il est disponible dans tous les contextes du script, y compris au sein des fonctions (pas besoin de faire "global"$_POST").
+Le tableau $_POST se remplit de la manière suivante :
+$_POST = array(
+    'name1' => 'valeur1',
+    'nameN => 'valeurN'
+);
+où les "name1"  et "nameN" correspondent aux attributs "name" du formulaire, et où "valeur1" et "valeurN" correspondent aux valeurs saisies par l'internaute.
+*/
+
+$info = ""; // Variable qui recevra les messages d'alerte, déclaration dans le script en général avec une valeur vide pour ne pas engendrer d'erreur sur la page 
+
+if(!empty($_POST)){ // petit rappel : empty() vérifie si une variable est vide :  0, '', NULL, false // avec !empty() on vérifie si la superglobal est n'est pas vide // si $_POST n'est pas vide , c'est que $_POST est rempli, donc que le formulaire a été envoyé. Notez que l'on peut l'envoyer avec des champs vides, les valeurs de $_POST étant alors des strings vides.
+// Vérification de tous les champs récupérés avec $_POST
+$verif = true; // Variable servant à vérifier si les champs sont remplis, (déclaration en "true")
+foreach($_POST as $key => $values){ // boucle pour vérifier le tableau $_POST
+    if(empty(trim($values))){ // Si valeurs => vides ou valeur => vide; $verif = false
+        $verif = false;
+    }
+}
+if(!$verif){ // Vérification de la valeur final de $verif // Si $verif = false => stockage message erreur dans $info
+    $info = alert("Tous les champs sont requis", "danger");
+} else{
+    // Si tout est renseigné, commencement validation des champs
+    // Stockage valeurs dans variables en vérifiant qu'il n'y a pas de chaînes de caractères vides
+    $nameCategory = trim($_POST['name']);
+    $descriptionCategory = trim($_POST['description']);
+
+    // Validation des données
+    if(strlen($nameCategory) < 3 || preg_match('/[0-9]+/', $nameCategory)){
+        // Expression régulière [0-9]+ recherche une séquence d'un ou plusieurs chiffres dans la chaîne de caractères, fonction preg_match() renvoie 1 si la correspondance est trouvé sinon elle renvoie 0 
+        $info = alert("Champs \"nom\" de la catégorie invalide", "danger");
+    }
+    if(strlen($descriptionCategory) < 50){
+        $info .= alert("Champs \"description\" de la catégorie invalide, veuillez renseigner davantage d'informations", "danger");
+    }
+    if(empty($info)){
+        $nameCategory = strip_tags($nameCategory);
+        $descriptionCategory = strip_tags($descriptionCategory);
+        
+        if(!empty($_GET['action']) && $_GET['action'] == 'update' && !empty($_GET['id_category'])){
+            $idCategory = htmlentities($_GET['id_category']);
+            update($idCategory, $nameCategory, $descriptionCategory); // Mise à jour avec fonction updateCategory()
+            header("location:categories.php");
+        } else{
+            addCategories($nameCategory, $descriptionCategory);
+            header("location:categories.php"); // méthode permettant d'envoyer des requêtes HTTP donc rafraîchie et supprime les données enregistrées
         }
     }
-
-    if($verif == false){
-        $info = alert("Veuillez renseigner tout les champs", "danger");
-    }else {
-        $catname = trim($_POST['name']);
-        $catdesc = trim($_POST['description']);
-
-        if (!isset($catname) || strlen($catname) < 3 || preg_match('/[0-9]/', $catname)) {
-            $info = alert("Le champs nom de la categories n'est pas valide", "danger");
-        }
-
-        if (!isset($catdesc) || strlen($catdesc) < 20) {
-            $info = alert("Le champs description de la categories n'est pas valide", "danger");
-        }
-
-        elseif (empty($info)) {
-            $catname = strtolower($catname);
-            $catname = htmlentities($catname);
-            $catBdd = showCat($catname);
-            if ($catBdd) {
-                $info = alert("la categorie existe deja", "danger");
-            }else {
-                $catdesc = htmlentities($catdesc);
-                
-                if ($_GET['action']=='update' && !empty($_GET['id_category'])) {
-
-                    $idcat = htmlentities($_GET['id_category']);
-                    update($idcat, $catname, $catdesc);
-                    
-                }else {
-                    addCategories($catname , $catdesc);
-                }
-                header("location:".RACINE_SITE."admin/categories.php");
-
-            }
-        }
-    }}
-
+}
+}
 require_once "../inc/header.inc.php";
 ?>
 <div class="row mt-5" style="padding-top: 8rem;">

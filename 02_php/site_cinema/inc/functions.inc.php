@@ -30,6 +30,15 @@ function alert(string $contenu, string $class){
         </div>";
 
 }
+
+function stringToArray(string $string ) :array{
+    
+    $array = explode('/', trim($string, '/')); // Je transforme ma châine de caractére en tableau et je supprime les / autour de la chaîne de caractére 
+    return $array; // ma fonction retourne un tableau
+
+}
+
+
 ######################################Fonction pour la deconection ################################
 
 function logOut(){
@@ -368,9 +377,9 @@ function addCategories($name ,$description):void{
 
 function deletcat(int $idcat):void{
     $cnx = connexionBdd();
-    $sql ="DELETE FROM categories WHERE id_category = :id_user  ";
+    $sql ="DELETE FROM categories WHERE id_category = :id  ";
     $request = $cnx->prepare($sql);
-    $request->execute(array(":id_user" => $idcat));
+    $request->execute(array(":id" => $idcat));
 }
 
 
@@ -409,15 +418,16 @@ function showUser(int $id):mixed{
 
 function update(int $idcat, string $name, string $description):void{
     $cnx = connexionBdd();
-    $sql ="UPDATE categories SET name = :name , description = :description WHERE id_category = :id_user , name = :name , description = :description";
+    $sql ="UPDATE categories SET name = :name , description = :description WHERE id_category = :id_user";
     $request = $cnx->prepare($sql);
     $request->execute(array(":id_user" => $idcat , ":name" => $name , ":description" => $description));
 }
-########################## ajout de film ##############################
 
-function addfilm($idcat ,$title ,$director ,$actors ,$age ,$duration ,$synopsis ,$date ,$price ,$stock ){
+########################## film ##############################
+
+function addfilm($idcat ,$title ,$director ,$actors ,$age ,$duration ,$synopsis ,$date ,$price ,$stock , $image){
     $cnx = connexionBdd();
-    $sql ="INSERT INTO films (category_id ,title, director ,actors ,ageLimit , duration ,synopsis ,date  ,price ,stock) VALUES (:category_id ,:title, :director ,:actors ,:ageLimit , :duration ,:synopsis ,:date ,:price ,:stock)";
+    $sql ="INSERT INTO films (category_id ,title, director ,actors ,ageLimit , duration ,synopsis ,date ,image ,price ,stock  ) VALUES (:category_id ,:title, :director ,:actors ,:ageLimit , :duration ,:synopsis ,:date ,:image ,:price ,:stock )";
     $request = $cnx->prepare($sql);
     $request->execute(array(
         ":category_id" => $idcat,
@@ -429,14 +439,114 @@ function addfilm($idcat ,$title ,$director ,$actors ,$age ,$duration ,$synopsis 
         ":synopsis" => $synopsis,
         ":date" => $date ,
         ":price" => $price,
-        ":stock" => $stock
+        ":stock" => $stock,
+        ":image" => $image
         
         // ":image" => $image, 
 
     
     ));
-};
+}
 
+
+
+function deletfilm(int $id):void{
+    $cnx = connexionBdd();
+    $sql ="DELETE FROM films WHERE id_film = :id  ";
+    $request = $cnx->prepare($sql);
+    $request->execute(array(":id" => $id));
+}
+
+
+
+
+function updateFilm(int $id_film,int $category_id,string $title,string $director,string $actors,string $ageLimit,string $duration,string $synopsis,string $date,string $image,float $price,int $stock):void{
+    $film = [
+      'id_film'=> $id_film,
+      'category_id'=>$category_id,
+      'title' => $title,
+      'director' => $director,
+      'actors' => $actors,
+      'ageLimit' => $ageLimit,
+      'duration' => $duration,
+      'synopsis' => $synopsis,
+      'date' => $date,
+      'image' => $image,
+      'price' => $price,
+      'stock' => $stock
+  ];
+  foreach($film as $key => $value){
+      $film[$key] = htmlentities($value,ENT_QUOTES,'UTF-8');
+  }
+    $cnx=connexionBdd();
+    $sql = "UPDATE films SET category_id = :category_id,title = :title,director = :director,actors = :actors,ageLimit = :ageLimit, duration =:duration,synopsis =:synopsis,date = :date, image = :image,price = :price, stock = :stock WHERE id_film = :id_film";
+    $request = $cnx->prepare($sql);
+    $request ->execute(array(
+                                ":id_film" => $film['id_film'],
+                                ":category_id" => $film['category_id'],
+                                ":title"=> $film['title'], 
+                                ":director"=>$film['director'], 
+                                ":actors"=>$film['actors'], 
+                                ":ageLimit"=>$film['ageLimit'],
+                                ":duration"=>$film['duration'],
+                                ":synopsis"=>$film['synopsis'],
+                                ":date"=>$film['date'],
+                                ":image"=>$film['image'],
+                                ":price"=>$film['price'],
+                                ":stock"=>$film['stock']
+
+    ));
+  }
+
+function allfilm() :mixed{
+    $cnx = connexionBdd();
+    $sql = "SELECT * FROM films";
+    $request = $cnx->query($sql);
+    $result = $request->fetchAll(); // fetchAll() récupère tout les résultats dans la reqûête et les sort sous forme d'un tableau à 2 dismensions
+    return $result;
+}
+
+function verifFilm($title ,$date){
+    $cnx = connexionBdd();
+    $sql = "SELECT * FROM films WHERE title = :id_category AND date = :date";
+    $request = $cnx->prepare($sql);
+    $request->execute(array(
+        ':id_category' => $title,
+        ':date'=> $date
+    ));
+    $result = $request->fetch();
+    return $result;
+}
+
+function showfilmviaID(int $name):mixed{
+    $cnx = connexionBdd();
+    $sql = "SELECT * FROM films WHERE id_film = :id";
+    $request = $cnx->prepare($sql);
+    $request->execute(array(
+        ':id' => $name
+    ));
+    $result = $request->fetch();
+    return $result;
+}
+
+function filmByDate(){
+    $cnx = connexionBdd();
+    $sql = "SELECT * FROM films ORDER BY date DESC LIMIT 6";
+    $request = $cnx->query($sql);
+    $result = $request->fetchAll();
+    return $result;
+}
+
+function filmbycategory($id) :mixed{
+    $cnx = connexionBdd();
+    $sql = "SELECT * FROM films WHERE category_id = :id";
+    $request = $cnx->prepare($sql);
+    $request->execute(array(
+        ':id' => $id
+    ));
+    $result = $request->fetchAll();
+    return $result;
+}
 
 ?>
 

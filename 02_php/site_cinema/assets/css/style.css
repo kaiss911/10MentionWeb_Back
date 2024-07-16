@@ -99,13 +99,13 @@ h2{
 
     color: var(--gray);
     box-shadow: var(--box-shadow-dark) !important;
-    transition: all 1s;
+    transition: all 0.5s;
 
 }
 .card:hover{
 
     cursor: pointer;
-    transform: scale(1.05);
+    transform: scale(0.1);
     box-shadow: var(--box-shadow-light) !important;
 }
 
@@ -258,6 +258,7 @@ footer{
 table {
     border-collapse: collapse;
     /* width: 100%; */
+
 
 }
 th {

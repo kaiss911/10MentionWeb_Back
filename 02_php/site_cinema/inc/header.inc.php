@@ -22,7 +22,7 @@
         <header>
             <nav class="navbar navbar-expand-lg fixed-top">
             <div class="container-fluid">
-                <h1><a class="navbar-brand" href="#">Movies</a></h1>
+            <h1><a class="navbar-brand" href="<?=RACINE_SITE?>index.php">M <img src="<?=RACINE_SITE?>assets/img/logo.png" alt="" > VIES</a></h1>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
                 </button>
@@ -36,9 +36,15 @@
                             Catégories
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Action</a></li>
-                            <li><a class="dropdown-item" href="#">Science fiction</a></li>
-                            <li><a class="dropdown-item" href="#">Aventure</a></li>
+                            <?php
+                            $cat = allcat();
+                            foreach ($cat as $key => $value) {
+                            ?>
+
+                            <li><a class="dropdown-item" href="<?=RACINE_SITE?>index.php?id_category=<?=$value['id_category']?>"><?=$value['name']?></a></li>
+
+                            <?php
+                            }?>
                         </ul>
                     </li>
                     <?php
