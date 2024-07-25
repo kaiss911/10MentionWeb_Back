@@ -13,7 +13,7 @@
         <link href="https://fonts.googleapis.com/css2?family=Dosis:wght@200..800&family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
 
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
+        <script src="https://js.stripe.com/v3/"></script>
         <link rel="stylesheet" href="<?=RACINE_SITE?>assets/css/style.css">
         <title></title>
     </head>
@@ -91,7 +91,7 @@
 
                     
                     <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="bi bi-cart"></i></a>
+                        <a class="nav-link" href="boutique/panier.php"><i class="bi bi-cart"><?= (!empty($_SESSION['panier']) && !empty($_SESSION['user']) ) ? count($_SESSION['panier']) : '' ?></i></a>
                     </li>
                 </ul>
                 </div>

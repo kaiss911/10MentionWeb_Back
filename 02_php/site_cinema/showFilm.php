@@ -1,34 +1,33 @@
 <?php
 require_once "inc/functions.inc.php";
-require_once "inc/header.inc.php";
 
 
 
 if(empty($_SESSION['user']) ) {
-
+     
      header("location:".RACINE_SITE."authentification.php");
- 
- }
- 
+     
+}
+
 if (isset($_GET) && isset($_GET['id_film']) && !empty($_GET['id_film'] )) {
-
-        
-    $idfilm = htmlentities($_GET['id_film']);
-
-    if(is_numeric($idfilm)) { 
-
-        $film  = showFilmViaId($idfilm);
-                
-        if (!$film) {
-
-            header('location:index.php');
-        }
-
-    
+     
+     
+     $idfilm = htmlentities($_GET['id_film']);
+     
+     if(is_numeric($idfilm)) { 
+          
+          $film  = showFilmViaId($idfilm);
+          
+          if (!$film) {
+               
+               header('location:index.php');
+          }
+          
+          
      } else{
-         header('location:index.php');
+          header('location:index.php');
      }
-   
+     
 }
 
 
@@ -39,17 +38,18 @@ $b = $film['stock'];
 debug($b);
 $date_time = new DateTime($film['duration']);
 $duration = $date_time->format('H:i');
+require_once "inc/header.inc.php";
 ?>
 
 <div class="film bg-dark">
-               
-               <div class="back">
+     
+     <div class="back">
                    <a href="<?=RACINE_SITE."index.php"?>"><i class="bi bi-arrow-left-circle-fill"></i></a>
                </div>
                <div class="cardDetails row mt-5">
                <h2 class="text-center mb-5"></h2>
                     <div class="col-12 col-xl-5 row p-5">
-                        <img src="<?=RACINE_SITE?>assets/<?=$film['image']?>" alt="Affiche du film">
+                        <img src="<?=RACINE_SITE?>assets/img/<?=$film['image']?>" alt="Affiche du film">
                         <div class="col-12 mt-5">
                               <form action="boutique/panier.php" method="post"  enctype="multipart/form-data"  class="w-50 m-auto row justify-content-center p-5">
                                                    <!-- Dans le formulaire d'ajout au panier, ajoutez des champs cachés pour chaque information que vous souhaitez conserver du film -->

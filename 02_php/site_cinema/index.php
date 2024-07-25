@@ -58,7 +58,7 @@ require_once "inc/header.inc.php";
         ?>
         <div class="col-sm-12 col-md-6 col-lg-4 col-xxl-3">
             <div class="card">
-                <img src="<?=RACINE_SITE?>assets/<?=$value['image']?>" alt="" >
+                <img src="<?=RACINE_SITE?>assets/img/<?=$value['image']?>" alt="" >
                 <div class="card-body">
                     <h3><?=$value['title']?></h3>     
                     <h4><?=$value['director']?></h4>

@@ -92,7 +92,7 @@ require_once "../inc/header.inc.php";
                             <!-- Je récupére les valeus de mon tabelau $film dans des td -->
                             <td><?= $film['id_film'] ?></td>
                             <td> <?= $film['title'] ?></td>
-                            <td> <img src="<?=RACINE_SITE."assets/". $film['image'] ?>" alt="affiche du film" class="img-fluid"></td>
+                            <td> <img src="<?=RACINE_SITE."assets/img/". $film['image'] ?>" alt="affiche du film" class="img-fluid"></td>
                             <td> <?= $film['director'] ?></td>
                             <td>
                                 <ul>
